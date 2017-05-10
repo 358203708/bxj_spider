@@ -20,9 +20,8 @@ class bxj:
         self.db = client.bxj
         self.posts = self.db.posts
 
-    def updateDB(self, posts):
-        for post in posts:
-            self.posts.update({'_id': post['_id']}, {'$set': post}, True)
+    def updateDB(self, post):
+        self.posts.update({'_id': post['_id']}, {'$set': post}, True)
 
 
     def build_soup(self, url, index):
@@ -54,7 +53,8 @@ class bxj:
             post['createDate'] = datetime.strptime(author_date.get_text().strip('\t\n\r')[-10:], "%Y-%m-%d")
             post['views'] = int(view_reply.get_text().split('/')[0])
             post['replies'] = int(view_reply.get_text().split('/')[1])
-            self.updateDB(self.posts)
+            #self.posts.update({'_id': post['_id']}, {'$set': post}, True)
+            self.updateDB(post)
 
     def loadPage(self, url, index):
         for index in range(1,11):
@@ -66,7 +66,6 @@ class bxj:
     def start(self):
         self.connectDB();
         self.loadPage(self.baseUrl, self.index)
-        
 
 inst = bxj()
 inst.start()
